@@ -1,0 +1,1 @@
+This project belongs to a future without copyright. Please use it however you'd like.
