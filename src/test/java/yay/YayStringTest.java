@@ -30,12 +30,11 @@ public class YayStringTest{
 		assertEquals(arrayObj.getKey().toString(), "Here's an example");
 		
 		YayString array = arrayObj.getValue();
-		YayString elem;
-		do{
+		YayString elem = array.nextArrayValue();
+		while(elem != null){
+			System.out.println(elem.asFixedIndentString());
 			elem = array.nextArrayValue();
-			if(elem != null)
-				System.out.println(elem.asFixedIndentString());
-		}while(elem != null);
+		}
 		
 		Map.Entry<CharSequence, YayString> extra = ys.nextObjectValue();
 		assertEquals(extra.getKey().toString(), "and so on");
