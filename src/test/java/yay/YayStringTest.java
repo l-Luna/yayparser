@@ -2,6 +2,7 @@ package yay;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,5 +40,38 @@ public class YayStringTest{
 		Map.Entry<CharSequence, YayString> extra = ys.nextObjectValue();
 		assertEquals(extra.getKey().toString(), "and so on");
 		assertEquals(extra.getValue().asSequence().toString(), "right");
+	}
+	
+	@Test
+	void testCollections(){
+		String arrayLike = """
+				- one!
+				- two!
+				- three!
+				""";
+		
+		assertEquals(
+				new YayString(arrayLike).allArrayValues(x -> x.asSequence().toString()),
+				List.of("one!", "two!", "three!")
+		);
+		
+		String objectLike = """
+				one: 1
+				two: 2
+				three:
+				 so the story begins with an adventurous keystroke
+				 and the creation of a small letter "e"
+				""";
+		
+		assertEquals(
+				new YayString(objectLike).allObjectValues(CharSequence::toString, x -> x.asSequence().toString()),
+				Map.of(
+						"one", "1",
+						"two", "2",
+						"three", """
+								so the story begins with an adventurous keystroke
+								 and the creation of a small letter "e\""""
+				)
+		);
 	}
 }

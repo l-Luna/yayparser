@@ -3,8 +3,8 @@ package yay;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
 
 public class YayString{
 	
@@ -128,6 +128,34 @@ public class YayString{
 			if(inner.isEmpty())
 				throw new YayParsingException("missing ':' to end field name");
 		}
+	}
+	
+	public List<YayString> allArrayValues(){
+		List<YayString> ret = new ArrayList<>();
+		for(YayString elem = nextArrayValue(); elem != null; elem = nextArrayValue())
+			ret.add(elem);
+		return ret;
+	}
+	
+	public Map<CharSequence, YayString> allObjectValues(){
+		Map<CharSequence, YayString> ret = new HashMap<>();
+		for(Map.Entry<CharSequence, YayString> elem = nextObjectValue(); elem != null; elem = nextObjectValue())
+			ret.put(elem.getKey(), elem.getValue());
+		return ret;
+	}
+	
+	public <T> List<T> allArrayValues(Function<YayString, T> mapper){
+		List<T> ret = new ArrayList<>();
+		for(YayString elem = nextArrayValue(); elem != null; elem = nextArrayValue())
+			ret.add(mapper.apply(elem));
+		return ret;
+	}
+	
+	public <K, V> Map<K, V> allObjectValues(Function<CharSequence, K> keyMapper, Function<YayString, V> valueMapper){
+		Map<K, V> ret = new HashMap<>();
+		for(Map.Entry<CharSequence, YayString> elem = nextObjectValue(); elem != null; elem = nextObjectValue())
+			ret.put(keyMapper.apply(elem.getKey()), valueMapper.apply(elem.getValue()));
+		return ret;
 	}
 	
 	public boolean equals(Object obj){
