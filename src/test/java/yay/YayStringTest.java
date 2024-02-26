@@ -74,4 +74,21 @@ public class YayStringTest{
 				)
 		);
 	}
+	
+	@Test
+	void testNestedCollections(){
+		String text = """
+				-
+				 - a
+				 - b
+				 - c
+				-
+				 - 1
+				 - 2
+				 - 3
+				   &4
+				""";
+		List<List<String>> innerLists = new YayString(text).allArrayValues(x -> x.allArrayValues(y -> y.asSequence().toString()));
+		assertEquals(innerLists, List.of(List.of("a", "b", "c"), List.of("1", "2", "3\n   &4")));
+	}
 }
